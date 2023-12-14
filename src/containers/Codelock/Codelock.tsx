@@ -1,24 +1,25 @@
 import { RootState } from '../../app/store.ts';
 import { useDispatch, useSelector } from 'react-redux';
-import { add } from './codelockSlice.ts';
-import { useEffect, useState } from 'react';
+import { add, check, deleteSymbol, reset } from './codelockSlice.ts';
 
 const Codelock = () => {
-  const [isDisable, setIsDisable] = useState(false);
-  const [readyToCheck, setReadyToCheck] = useState(true);
-
   const codelockValue = useSelector((state: RootState) => state.codelock.value);
+  const numbersDisabled = useSelector(
+    (state: RootState) => state.codelock.isNumbersDisabled,
+  );
+  const checkDisabled = useSelector(
+    (state: RootState) => state.codelock.isCheckDisabled,
+  );
+  const deleteDisabled = useSelector(
+    (state: RootState) => state.codelock.isDeleteDisabled,
+  );
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (codelockValue.length === 4) {
-      setIsDisable((prevState) => !prevState);
-      setReadyToCheck((prevState) => !prevState);
-      console.log('DISABLED');
-    }
-  }, [codelockValue.length]);
-
   const btnStyle = 'basis-1/3 border rounded p-1 disabled:bg-neutral-300';
+
+  const handleClick = () => {
+    dispatch(check());
+    setTimeout(() => dispatch(reset()), 2000);
+  };
 
   return (
     <>
@@ -31,7 +32,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(7))}
             className="basis-1/3 border rounded p-1 disabled:bg-neutral-300"
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             7
           </button>
@@ -39,7 +40,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(8))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             8
           </button>
@@ -47,7 +48,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(9))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             9
           </button>
@@ -55,7 +56,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(4))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             4
           </button>
@@ -63,7 +64,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(5))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             5
           </button>
@@ -71,7 +72,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(6))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             6
           </button>
@@ -79,7 +80,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(1))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             1
           </button>
@@ -87,7 +88,7 @@ const Codelock = () => {
             onClick={() => dispatch(add(2))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             2
           </button>
@@ -95,24 +96,30 @@ const Codelock = () => {
             onClick={() => dispatch(add(3))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             3
           </button>
-          <button className={btnStyle} type="button">
+          <button
+            onClick={() => dispatch(deleteSymbol())}
+            className={btnStyle}
+            type="button"
+            disabled={deleteDisabled}
+          >
             del
           </button>
           <button
             onClick={() => dispatch(add(0))}
             className={btnStyle}
             type="button"
-            disabled={isDisable}
+            disabled={numbersDisabled}
           >
             0
           </button>
           <button
+            onClick={handleClick}
             className="basis-1/3 border rounded p-1 disabled:bg-neutral-300 enabled:bg-emerald-300"
-            disabled={readyToCheck}
+            disabled={checkDisabled}
             type="button"
           >
             E
